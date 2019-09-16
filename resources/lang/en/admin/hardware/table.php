@@ -7,6 +7,7 @@ return array(
     'book_value'  	=> 'Value',
     'change' 		=> 'In/Out',
     'checkout_date' => 'Checkout Date',
+    'checkedout_to' => 'Checked Out To',
     'checkoutto' 	=> 'Checked Out',
     'diff' 			=> 'Diff',
     'dl_csv' 		=> 'Download CSV',

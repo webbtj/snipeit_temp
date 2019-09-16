@@ -174,11 +174,23 @@ class AssetsTransformer
         return (new DatatablesTransformer)->transformDatatables($array, $total);
     }
 
+
+   //I don't claim to be a developer, there is probably a better way to do this using the existing function
+   //This was the only way I knew how to grab only the single value I was needing
+   public function transformAssignedToForRequestedAsset($asset)
+    {
+        if ($asset->checkedOutToUser()) {
+		$name = e($asset->assigned->getFullNameAttribute());
+	 return $name;
+        }
+    }
+
     public function transformRequestedAsset(Asset $asset) {
         $array = [
             'id' => (int) $asset->id,
             'name' => e($asset->name),
             'asset_tag' => e($asset->asset_tag),
+	    'assigned_to' => $this->transformAssignedToForRequestedAsset($asset),  //Adding assigned_to to the array and calling the function that returns name value only
             'serial' => e($asset->serial),
             'image' => ($asset->getImageUrl()) ? $asset->getImageUrl() : null,
             'model' => ($asset->model) ? e($asset->model->name) : null,
@@ -188,10 +200,9 @@ class AssetsTransformer
             'status'=> ($asset->assetstatus) ? $asset->present()->statusMeta : null,
         ];
 
-        $permissions_array['available_actions'] = [
+	$permissions_array['available_actions'] = [
             'cancel' => ($asset->isRequestedBy(\Auth::user())) ? true : false,
             'request' => ($asset->isRequestedBy(\Auth::user())) ? false : true,
-
         ];
 
          $array += $permissions_array;

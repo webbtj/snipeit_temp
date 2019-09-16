@@ -678,7 +678,7 @@ class AssetsController extends Controller
         if ($request->filled('name')) {
             $asset->name = $request->input('name');
         }
-        
+
         $asset->location_id =  $asset->rtd_location_id;
 
         if ($request->filled('location_id')) {
@@ -783,14 +783,15 @@ class AssetsController extends Controller
             case 'manufacturer':
                 $assets->OrderManufacturer($order);
                 break;
+	    case 'assigned_to':
+		$assets->OrderAssigned($order); //added assigned_to so requestable assets could be sorted by assigned name
             default:
                 $assets->orderBy('assets.created_at', $order);
                 break;
         }
 
-
         $total = $assets->count();
         $assets = $assets->skip($offset)->take($limit)->get();
-        return (new AssetsTransformer)->transformRequestedAssets($assets, $total);
-    }
+       return (new AssetsTransformer)->transformRequestedAssets($assets, $total);
+	}
 }

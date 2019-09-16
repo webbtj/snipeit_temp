@@ -7,6 +7,7 @@ return array(
     'asset'  					=> 'Asset',
     'bulk_checkout'             => 'Checkout Assets',
     'checkin'  					=> 'Checkin Asset',
+    'checkedout_to'		=> 'Checked Out To',
     'checkout'  				=> 'Checkout Asset',
     'clone'  					=> 'Clone Asset',
     'deployable'  				=> 'Deployable',

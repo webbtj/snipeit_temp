@@ -43,7 +43,7 @@ return array(
     'Low_Inventory_Report' => 'Low Inventory Report',
     'min_QTY' => 'Min QTY',
     'name' => 'Name',
-    'new_item_checked' => 'A new item has been checked out under your name, details are below.',
+    'new_item_checked' => 'A new item has been checked out under your name, item details are below. Please note: You are responsible for this item, do not trade or lend this item to anyone without first checking it in, or contacting IT.',
     'password' => 'Password:',
     'password_reset' => 'Password Reset',
 
@@ -58,7 +58,7 @@ return array(
     'tag' => 'Tag',
     'test_email' => 'Test Email from Snipe-IT',
     'test_mail_text' => 'This is a test from the Snipe-IT Asset Management System. If you got this, mail is working :)',
-    'the_following_item' => 'The following item has been checked in: ',
+    'the_following_item' => 'The following item that was assigned to you has been checked in: ',
     'low_inventory_alert' => 'There is :count item that is below minimum inventory or will soon be low.|There are :count items that are below minimum inventory or will soon be low.',
     'assets_warrantee_alert' => 'There is :count asset with a warrantee expiring in the next :threshold days.|There are :count assets with warrantees expiring in the next :threshold days.',
     'license_expiring_alert' => 'There is :count license expiring in the next :threshold days.|There are :count licenses expiring in the next :threshold days.',

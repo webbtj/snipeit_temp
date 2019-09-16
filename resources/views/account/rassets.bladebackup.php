@@ -46,14 +46,19 @@
                                         data-toolbar="#toolbar"
                                         id="assetsListingTable"
                                         class="table table-striped snipe-table"
-                                        data-url="{{ route('api.assets.requestable', ['requestable' => True ]) }}">
+                                        data-url="{{ route('api.assets.requestable', ['requestable' => true]) }}">
 
                                         <thead>
                                             <tr>
+                                                <th class="col-md-1" data-field="image" data-formatter="imageFormatter" data-sortable="true">{{ trans('general.image') }}</th>
                                                 <th class="col-md-2" data-field="model" data-sortable="true">{{ trans('admin/hardware/table.asset_model') }}</th>
-                                                <th class="col-md-1" data-field="serial" data-sortable="true">{{ trans('admin/hardware/table.serial') }}</th>
-                                                <th class="col-md-1" data-field="assigned_to" data-sortable="true">{{ trans('admin/hardware/form.checkedout_to') }}</th>
-  						<th class="col-md-1" data-formatter="assetRequestActionsFormatter" data-field="actions" data-sortable="false">{{ trans('table.actions') }}</th>
+                                                <th class="col-md-2" data-field="model_number" data-sortable="true">{{ trans('admin/models/table.modelnumber') }}</th>
+                                                <th class="col-md-2" data-field="name" data-sortable="true">{{ trans('admin/hardware/form.name') }}</th>
+                                                <th class="col-md-3" data-field="serial" data-sortable="true">{{ trans('admin/hardware/table.serial') }}</th>
+                                                <th class="col-md-2" data-field="location" data-sortable="true">{{ trans('admin/hardware/table.location') }}</th>
+                                                <th class="col-md-2" data-field="status" data-sortable="true">{{ trans('admin/hardware/table.status') }}</th>
+                                                <th class="col-md-2" data-field="expected_checkin" data-formatter="dateDisplayFormatter" data-sortable="true">{{ trans('admin/hardware/form.expected_checkin') }}</th>
+                                                <th class="col-md-1" data-formatter="assetRequestActionsFormatter" data-field="actions" data-sortable="false">{{ trans('table.actions') }}</th>
                                             </tr>
                                         </thead>
                                     </table>
