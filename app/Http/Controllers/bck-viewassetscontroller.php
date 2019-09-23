@@ -118,7 +118,7 @@ class ViewAssetsController extends Controller
 
         $settings = Setting::getSettings();
 
-        if ($item_request = $item->isRequestedBy($user) || ($user->id != $findlog->item->assigned_to)) {
+        if ($item_request = $item->isRequestedBy($user)) {
            $item->cancelRequest();
            $data['item_quantity'] = $item_request->qty;
            $logaction->logaction('request_canceled');
@@ -155,7 +155,7 @@ class ViewAssetsController extends Controller
         // Check if the asset exists and is requestable
         if (is_null($asset = Asset::RequestableAssets()->find($assetId))) {
             return redirect()->route('requestable-assets')
-               ->with('error', trans('admin/hardware/message.does_not_exist_or_not_requestable'));
+                ->with('error', trans('admin/hardware/message.does_not_exist_or_not_requestable'));
         } elseif (!Company::isCurrentUserHasAccess($asset)) {
             return redirect()->route('requestable-assets')
                 ->with('error', trans('general.insufficient_permissions'));
@@ -178,7 +178,7 @@ class ViewAssetsController extends Controller
         $logaction->target_type = User::class;
 
 
-        // If it's already requested, cancel the request
+        // If it's already requested, cancel the request.
         if ($asset->isRequestedBy(Auth::user())) {
             $asset->cancelRequest();
             $asset->decrement('requests_counter', 1);

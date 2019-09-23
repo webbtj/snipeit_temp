@@ -168,7 +168,8 @@ class Ldap extends Model
         $ldap_result_emp_num = Setting::getSettings()->ldap_emp_num;
         $ldap_result_last_name = Setting::getSettings()->ldap_lname_field;
         $ldap_result_first_name = Setting::getSettings()->ldap_fname_field;
-        $ldap_result_email = Setting::getSettings()->ldap_email;
+	$username = $ldap_result_last_name && $ldap_result_first_name;
+        $ldap_result_email = User::generateEmailFromFullName($username);
 
         // Get LDAP user data
         $item = array();
@@ -202,7 +203,8 @@ class Ldap extends Model
             $user->first_name = $item["firstname"];
             $user->last_name = $item["lastname"];
             $user->username = $item["username"];
-            $user->email = $item["email"];
+	    $name = str_slug($user->first_name) . '.' . str_slug($user->last_name);
+            $user->email = $name.'@'.'redspace.com';
 
             if (Setting::getSettings()->ldap_pw_sync=='1') {
                 $user->password = bcrypt(Input::get("password"));

@@ -52,7 +52,8 @@
                                             <tr>
                                                 <th class="col-md-2" data-field="model" data-sortable="true">{{ trans('admin/hardware/table.asset_model') }}</th>
                                                 <th class="col-md-1" data-field="serial" data-sortable="true">{{ trans('admin/hardware/table.serial') }}</th>
-                                                <th class="col-md-1" data-field="assigned_to" data-sortable="true">{{ trans('admin/hardware/form.checkedout_to') }}</th>
+                                        	<th class="col-md-2" data-field="status" data-sortable="true">{{ trans('admin/hardware/table.status') }}</th> 
+						<th class="col-md-1" data-field="assigned_to" data-sortable="true">{{ trans('admin/hardware/form.checkedout_to') }}</th>
   						<th class="col-md-1" data-formatter="assetRequestActionsFormatter" data-field="actions" data-sortable="false">{{ trans('table.actions') }}</th>
                                             </tr>
                                         </thead>
