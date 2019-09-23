@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
 |--------------------------------------------------------------------------
 |
 | Routes for various modal dialogs to interstitially create various things
-| 
+|
 */
 
 Route::group(['middleware' => 'auth','prefix' => 'modals'], function () {
@@ -269,6 +269,11 @@ Route::group([ 'prefix' => 'account', 'middleware' => ['auth']], function () {
     Route::get(
         'request-asset/{assetId}',
         [ 'as' => 'account/request-asset', 'uses' => 'ViewAssetsController@getRequestAsset' ]
+    );
+    # Request a Return
+    Route::get(
+        'request-asset-return/{assetId}',
+        [ 'as' => 'account/request-asset-return', 'uses' => 'ViewAssetsController@getRequestAssetReturn' ]
     );
 
     Route::post(
@@ -466,6 +471,3 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 Auth::routes();
-
-
-

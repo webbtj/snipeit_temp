@@ -17,6 +17,7 @@ use Watson\Validating\ValidatingTrait;
 use DB;
 use App\Notifications\CheckinAssetNotification;
 use App\Notifications\CheckoutAssetNotification;
+use App\Models\CheckoutRequest;
 
 /**
  * Model for Assets.
@@ -117,27 +118,27 @@ class Asset extends Depreciable
 
     /**
      * The attributes that should be included when searching the model.
-     * 
+     *
      * @var array
      */
     protected $searchableAttributes = [
-      'name', 
-      'asset_tag', 
-      'serial', 
-      'order_number', 
-      'purchase_cost', 
-      'notes', 
+      'name',
+      'asset_tag',
+      'serial',
+      'order_number',
+      'purchase_cost',
+      'notes',
       'created_at',
-      'updated_at',      
-      'purchase_date', 
-      'expected_checkin', 
-      'next_audit_date', 
+      'updated_at',
+      'purchase_date',
+      'expected_checkin',
+      'next_audit_date',
       'last_audit_date'
     ];
 
     /**
      * The relations and their attributes that should be included when searching the model.
-     * 
+     *
      * @var array
      */
     protected $searchableRelations = [
@@ -148,7 +149,7 @@ class Asset extends Depreciable
         'model'              => ['name', 'model_number'],
         'model.category'     => ['name'],
         'model.manufacturer' => ['name'],
-    ];     
+    ];
 
     public function getDisplayNameAttribute()
     {
@@ -232,13 +233,13 @@ class Asset extends Depreciable
                 $this->location_id = $target->id;
             }
         }
-        
+
         /**
          * Does the user have to confirm that they accept the asset?
          *
          * If so, set the acceptance-status to "pending".
          * This value is used in the unaccepted assets reports, for example
-         * 
+         *
          * @see https://github.com/snipe/snipe-it/issues/5772
          */
         if ($this->requireAcceptance() && $target instanceof User) {
@@ -248,6 +249,24 @@ class Asset extends Depreciable
         if ($this->save()) {
             $this->logCheckout($note, $target);
             $this->increment('checkout_counter', 1);
+
+            //Fullfill Checkout Request
+            if($target instanceof User){
+                $requests = CheckoutRequest::
+                              where('user_id', $target->id)
+                              ->where('requestable_id', $this->id)
+                              ->where('requestable_type', get_class($this))
+                              ->get();
+
+                if(!$checkout_at){
+                    $checkout_at = Carbon::now();
+                }
+                $requests->each(function($request) use($checkout_at){
+                    $request->fulfilled_at = $checkout_at;
+                    $request->save();
+                });
+            }
+
             return true;
         }
         return false;
@@ -622,14 +641,14 @@ class Asset extends Depreciable
 
     /**
      * Run additional, advanced searches.
-     * 
+     *
      * @param  Illuminate\Database\Eloquent\Builder $query
      * @param  array  $terms The search terms
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function advancedTextSearch(Builder $query, array $terms) {
 
-      
+
       /**
        * Assigned user
        */
@@ -644,13 +663,13 @@ class Asset extends Depreciable
           ->orWhere('assets_users.first_name', 'LIKE', '%'.$term.'%')
           ->orWhere('assets_users.last_name', 'LIKE', '%'.$term.'%')
           ->orWhere('assets_users.username', 'LIKE', '%'.$term.'%')
-          ->orWhereRaw('CONCAT('.DB::getTablePrefix().'assets_users.first_name," ",'.DB::getTablePrefix().'assets_users.last_name) LIKE ?', ["%$term%", "%$term%"]);      
+          ->orWhereRaw('CONCAT('.DB::getTablePrefix().'assets_users.first_name," ",'.DB::getTablePrefix().'assets_users.last_name) LIKE ?', ["%$term%", "%$term%"]);
 
       }
 
       /**
        * Assigned location
-       */      
+       */
       $query = $query->leftJoin('locations as assets_locations',function ($leftJoin) {
         $leftJoin->on("assets_locations.id","=","assets.assigned_to")
           ->where("assets.assigned_type","=",Location::class);
@@ -658,13 +677,13 @@ class Asset extends Depreciable
 
       foreach($terms as $term) {
 
-        $query = $query->orWhere('assets_locations.name', 'LIKE', '%'.$term.'%');     
+        $query = $query->orWhere('assets_locations.name', 'LIKE', '%'.$term.'%');
 
-      }      
+      }
 
       /**
        * Assigned assets
-       */      
+       */
       $query = $query->leftJoin('assets as assigned_assets',function ($leftJoin) {
         $leftJoin->on('assigned_assets.id', '=', 'assets.assigned_to')
           ->where('assets.assigned_type', '=', Asset::class);
@@ -673,7 +692,7 @@ class Asset extends Depreciable
       foreach($terms as $term) {
 
         $query = $query->orWhere('assigned_assets.name', 'LIKE', '%'.$term.'%');
-                  
+
       }
 
       return $query;
@@ -1186,7 +1205,7 @@ class Asset extends Depreciable
              * assets.location would fail, as that field doesn't exist -- plus we're already searching
              * against those relationships earlier in this method.
              *
-             * - snipe 
+             * - snipe
              *
              */
             if (($fieldname!='category') && ($fieldname!='model_number') && ($fieldname!='rtd_location') && ($fieldname!='location') && ($fieldname!='supplier')

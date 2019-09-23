@@ -76,6 +76,10 @@ Route::group(
             'as' => 'checkout/hardware',
             'uses' => 'AssetCheckoutController@create'
         ]);
+        Route::get('{assetId}/checkout/{requestingUserId}', [
+            'as' => 'checkout/hardware',
+            'uses' => 'AssetCheckoutController@create'
+        ]);
         Route::post('{assetId}/checkout', [
             'as' => 'checkout/hardware',
             'uses' => 'AssetCheckoutController@store'

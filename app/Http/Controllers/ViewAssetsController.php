@@ -14,6 +14,8 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\RequestAssetNotification;
 use App\Notifications\RequestAssetCancelationNotification;
+use App\Notifications\RequestAssetReturnNotification;
+use App\Notifications\RequestAssetCancelationReturnNotification;
 use Auth;
 use Config;
 use DB;
@@ -179,10 +181,10 @@ class ViewAssetsController extends Controller
 
 
         // If it's already requested, cancel the request.
-        if ($asset->isRequestedBy(Auth::user())) {
+        if ($asset->isUnfulfilledRequestedBy(Auth::user())) {
             $asset->cancelRequest();
             $asset->decrement('requests_counter', 1);
-            
+
             $logaction->logaction('request canceled');
             $settings->notify(new RequestAssetCancelationNotification($data));
             return redirect()->route('requestable-assets')
@@ -198,6 +200,58 @@ class ViewAssetsController extends Controller
             return redirect()->route('requestable-assets')->with('success')->with('success', trans('admin/hardware/message.requests.success'));
         }
 
+
+    }
+
+    public function getRequestAssetReturn($assetId = null){
+        $user = Auth::user();
+
+        // Check if the asset exists and is requestable
+        if (is_null($asset = Asset::RequestableAssets()->find($assetId))) {
+            return redirect()->route('requestable-assets')
+                ->with('error', trans('admin/hardware/message.does_not_exist_or_not_requestable'));
+        } elseif (!Company::isCurrentUserHasAccess($asset)) {
+            return redirect()->route('requestable-assets')
+                ->with('error', trans('general.insufficient_permissions'));
+        }
+
+        if(!$asset->isCheckedOutBy($user)){
+            return redirect()->route('requestable-assets')
+                ->with('error', trans('admin/hardware/message.item_not_checked_out_user'));
+        }
+
+        $data['item'] = $asset;
+        $data['target'] =  Auth::user();
+        $data['item_quantity'] = 1;
+        $settings = Setting::getSettings();
+
+        $logaction = new Actionlog();
+        $logaction->item_id = $data['asset_id'] = $asset->id;
+        $logaction->item_type = $data['item_type'] = Asset::class;
+        $logaction->created_at = $data['requested_date'] = date("Y-m-d H:i:s");
+
+        if ($user->location_id) {
+            $logaction->location_id = $user->location_id;
+        }
+        $logaction->target_id = $data['user_id'] = Auth::user()->id;
+        $logaction->target_type = User::class;
+
+        // If it's already requested, cancel the request.
+        if ($asset->isUnfulfilledReturnRequestedBy(Auth::user())) {
+            $asset->cancelReturnRequest();
+
+            $logaction->logaction('return request canceled');
+            $settings->notify(new RequestAssetCancelationReturnNotification($data));
+            return redirect()->route('requestable-assets')
+                ->with('success')->with('success', trans('admin/hardware/message.requests.cancel-success'));
+        } else {
+
+            $logaction->logaction('checkin requested');
+            $asset->requestCheckin();
+            $settings->notify(new RequestAssetReturnNotification($data));
+
+            return redirect()->route('requestable-assets')->with('success')->with('success', trans('admin/hardware/message.request_return_success'));
+        }
 
     }
 

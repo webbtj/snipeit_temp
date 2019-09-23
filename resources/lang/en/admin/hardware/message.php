@@ -8,6 +8,9 @@ return array(
     'does_not_exist_or_not_requestable' => 'Nice try. That asset does not exist or is not requestable.',
     'assoc_users'	 	=> 'This asset is currently checked out to a user and cannot be deleted. Please check the asset in first, and then try deleting again. ',
 
+    'item_not_checked_out_user' => "You don't have this item checked out, so you cannot return it.",
+    'request_return_success'    => "Your request to return the item has been received.",
+
     'create' => array(
         'error'   		=> 'Asset was not created, please try again. :(',
         'success' 		=> 'Asset created successfully. :)'
@@ -77,7 +80,8 @@ return array(
     'requests' => array(
         'error'   		=> 'Asset was not requested, please try again',
         'success' 		=> 'Asset requested successfully.',
-        'canceled'      => 'Checkout request successfully canceled'
+        'canceled'      => 'Checkout request successfully canceled',
+        'cancel-success'=>  'Request cancelled successfully.'
     )
 
 );

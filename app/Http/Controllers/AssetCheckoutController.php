@@ -24,7 +24,7 @@ class AssetCheckoutController extends Controller
     * @since [v1.0]
     * @return View
     */
-    public function create($assetId)
+    public function create($assetId, $requestingUserId = null)
     {
         // Check if the asset exists
         if (is_null($asset = Asset::find(e($assetId)))) {
@@ -34,7 +34,7 @@ class AssetCheckoutController extends Controller
         $this->authorize('checkout', $asset);
 
         if ($asset->availableForCheckout()) {
-            return view('hardware/checkout', compact('asset'));
+            return view('hardware/checkout', compact('asset', 'requestingUserId'));
         }
         return redirect()->route('hardware.index')->with('error', trans('admin/hardware/message.checkout.not_available'));
 
@@ -63,6 +63,7 @@ class AssetCheckoutController extends Controller
             $admin = Auth::user();
 
             $target = $this->determineCheckoutTarget($asset);
+
             if ($asset->is($target)) {
                 throw new CheckoutNotAllowed('You cannot check an asset out to itself.');
             }

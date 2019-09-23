@@ -8,6 +8,10 @@
                 <option value="{{ $user_id }}" selected="selected">
                     {{ (\App\Models\User::find($user_id)) ? \App\Models\User::find($user_id)->present()->fullName : '' }}
                 </option>
+            @elseif ($requestingUserId)
+                <option value="{{$requestingUserId}}">
+                    {{ (\App\Models\User::find($requestingUserId)) ? \App\Models\User::find($requestingUserId)->present()->fullName : '' }}
+                </option>
             @else
                 <option value="">{{ trans('general.select_user') }}</option>
             @endif

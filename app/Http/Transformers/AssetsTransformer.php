@@ -189,9 +189,10 @@ class AssetsTransformer
         ];
 
         $permissions_array['available_actions'] = [
-            'cancel' => ($asset->isRequestedBy(\Auth::user())) ? true : false,
-            'request' => ($asset->isRequestedBy(\Auth::user())) ? false : true,
-
+            'cancel' => ($asset->isUnfulfilledRequestedBy(\Auth::user()) && !$asset->isCheckedOutBy(\Auth::user()) ) ? true : false,
+            'request' => ($asset->isUnfulfilledRequestedBy(\Auth::user())) ? false : true,
+            'cancelReturn' => ($asset->isCheckedOutBy(\Auth::user()) && $asset->isUnfulfilledReturnRequestedBy(\Auth::user())) ? true : false,
+            'requestReturn' => ($asset->isCheckedOutBy(\Auth::user()) && !$asset->isUnfulfilledReturnRequestedBy(\Auth::user())) ? true : false,
         ];
 
          $array += $permissions_array;
