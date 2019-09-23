@@ -318,9 +318,13 @@
 
     // This is only used by the requestable assets section
     function assetRequestActionsFormatter (row, value) {
-        if (value.available_actions.cancel == true)  {
-            return '<form action="{{ url('/') }}/account/request-asset/'+ value.id + '" method="GET"><button class="btn btn-danger btn-sm" data-tooltip="true" title="Cancel Request">Cancel Request</button></form>';
-        } else if (value.available_actions.request == true) {
+        if (value.available_actions.requestReturn == true)  {
+            return '<form action="{{ url('/') }}/account/request-asset-return/'+ value.id + '" method="GET"><button class="btn btn-primary btn-sm" data-tooltip="true" title="Request to return this item">{{ trans('button.request_return') }}</button></form>';
+        } else if (value.available_actions.cancelReturn == true)  {
+            return '<form action="{{ url('/') }}/account/request-asset-return/'+ value.id + '" method="GET"><button class="btn btn-danger btn-sm" data-tooltip="true" title="Cancel this item return request">{{ trans('button.cancel_return') }}</button></form>';
+        } else if (value.available_actions.cancel == true)  {
+            return '<form action="{{ url('/') }}/account/request-asset/'+ value.id + '" method="GET"><button class="btn btn-danger btn-sm" data-tooltip="true" title="Cancel this item request">{{ trans('button.cancel') }}</button></form>';
+        } else if (value.available_actions.request == true)  {
             return '<form action="{{ url('/') }}/account/request-asset/'+ value.id + '" method="GET"><button class="btn btn-primary btn-sm" data-tooltip="true" title="Request this item">{{ trans('button.request') }}</button></form>';
 	//} else {
         //    return '<button class="btn btn-primary.disabled btn-sm" style="background-color:lightgrey; cursor:default;">Checked Out</button>';

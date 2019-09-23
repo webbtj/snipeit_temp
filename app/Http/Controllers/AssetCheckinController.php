@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Http\Requests\AssetCheckinRequest;
 use App\Models\Asset;
+use App\Models\CheckinRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Carbon\Carbon;
 
 class AssetCheckinController extends Controller
 {
@@ -80,6 +83,20 @@ class AssetCheckinController extends Controller
         // Was the asset updated?
         if ($asset->save()) {
             $logaction = $asset->logCheckin($target, e(request('note')));
+
+            if($target instanceof User){
+                $requests = CheckinRequest::
+                              where('user_id', $target->id)
+                              ->where('requestable_id', $asset->id)
+                              ->where('requestable_type', get_class($asset))
+                              ->get();
+
+                $checkin_at = Carbon::now();
+                $requests->each(function($request) use($checkin_at){
+                    $request->fulfilled_at = $checkin_at;
+                    $request->save();
+                });
+            }
 
             $data['log_id'] = $logaction->id;
             $data['first_name'] = get_class($target) == User::class ? $target->first_name : '';

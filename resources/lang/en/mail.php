@@ -3,6 +3,8 @@
 return array(
     'a_user_canceled' => 'A user has canceled an item request on the website',
     'a_user_requested' => 'A user has requested an item on the website',
+    'a_user_requested_return' => 'A user has requested to return an item on the website',
+    'a_user_canceled_return' => 'A user has canceled an item return request on the website',
     'accessory_name' => 'Accessory Name:',
     'additional_notes' => 'Additional Notes:',
     'admin_has_created' => 'An administrator has created an account for you on the :web website.',
@@ -37,6 +39,8 @@ return array(
     'item' => 'Item:',
     'Item_Request_Canceled' => 'Item Request Canceled',
     'Item_Requested' => 'Item Requested',
+    'Item_Return_Requested' => 'Item Return Requested',
+    'Item_Return_Request_Canceled' => 'Item Return Request Canceled',
     'link_to_update_password' => 'Please click on the following link to update your :web password:',
     'login_first_admin' => 'Login to your new Snipe-IT installation using the credentials below:',
     'login' => 'Login:',
