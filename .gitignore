@@ -1,7 +1,15 @@
 .couscous
 .DS_Store
 .env
+.env-example
+.env-save
+.env-testing
+.env-testing-ci
+.env-tests
+.env.unit-tests
 .idea
+.htaccess
+.htaccess.save
 /bin/
 /bootstrap/compiled.php
 /node_modules
@@ -10,6 +18,7 @@ app/database/*.sqlite
 app/storage/meta/services.json
 composer.phar
 crowdin.yaml
+database/*
 Homestead.json
 Homestead.yaml
 output

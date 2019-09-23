@@ -51,7 +51,7 @@ class LdapSync extends Command
 
         $ldap_result_active_flag = Setting::getSettings()->ldap_active_flag_field;
         $ldap_result_emp_num = Setting::getSettings()->ldap_emp_num;
-        $ldap_result_email = Setting::getSettings()->ldap_email;
+        $ldap_result_email = User::generateEmailFromFullName($user_array['full_name']);
 
         try {
             $ldapconn = Ldap::connectToLdap();
@@ -165,7 +165,7 @@ class LdapSync extends Command
                 $item["lastname"] = isset($results[$i][$ldap_result_last_name][0]) ? $results[$i][$ldap_result_last_name][0] : "";
                 $item["firstname"] = isset($results[$i][$ldap_result_first_name][0]) ? $results[$i][$ldap_result_first_name][0] : "";
                 $item["email"] = isset($results[$i][$ldap_result_email][0]) ? $results[$i][$ldap_result_email][0] : "" ;
-		$item["ldap_location_override"] = isset($results[$i]["ldap_location_override"]) ? $results[$i]["ldap_location_override"]:"";
+                $item["ldap_location_override"] = isset($results[$i]["ldap_location_override"]) ? $results[$i]["ldap_location_override"]:"";
                 $item["location_id"] = isset($results[$i]["location_id"]) ? $results[$i]["location_id"]:"";
 
                 $user = User::where('username', $item["username"])->first();
@@ -183,9 +183,8 @@ class LdapSync extends Command
                 $user->first_name = $item["firstname"];
                 $user->last_name = $item["lastname"];
                 $user->username = $item["username"];
-		$name = str_slug($user->first_name) . '.' . str_slug($user->last_name);
-		$user->email = $name.'@'.'redspace.com';
-		$user->employee_num = e($item["employee_number"]);
+                $user->email = $item["email"];
+                $user->employee_num = e($item["employee_number"]);
 
                 // Sync activated state for Active Directory.
                 if ( array_key_exists('useraccountcontrol', $results[$i]) ) {
@@ -231,6 +230,7 @@ class LdapSync extends Command
             }
 
         }
+
         if ($this->option('summary')) {
             for ($x = 0; $x < count($summary); $x++) {
                 if ($summary[$x]['status']=='error') {

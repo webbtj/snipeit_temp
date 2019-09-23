@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => 'v1','namespace' => 'Api', 'middleware' => 'api'], function () {
 
     Route::group(['prefix' => 'account'], function () {
-        Route::get('requestable',
+        Route::get('requestable/hardware',
             [
                 'as' => 'api.assets.requestable',
                 'uses' => 'AssetsController@requestable'
