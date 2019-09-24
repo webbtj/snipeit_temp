@@ -50,7 +50,7 @@ class AssetCheckoutController extends Controller
      * @return Redirect
      * @since [v1.0]
      */
-    public function store(AssetCheckoutRequest $request, $assetId)
+    public function store(AssetCheckoutRequest $request, $assetId, $requestingUserId = null)
     {
         try {
             // Check if the asset exists
