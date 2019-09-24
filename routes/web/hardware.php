@@ -77,11 +77,15 @@ Route::group(
             'uses' => 'AssetCheckoutController@create'
         ]);
         Route::get('{assetId}/checkout/{requestingUserId}', [
-            'as' => 'checkout/hardware',
+            'as' => 'checkout/hardware/id',
             'uses' => 'AssetCheckoutController@create'
         ]);
         Route::post('{assetId}/checkout', [
             'as' => 'checkout/hardware',
+            'uses' => 'AssetCheckoutController@store'
+        ]);
+        Route::post('{assetId}/checkout/{requestingUserId}', [
+            'as' => 'checkout/hardware/id',
             'uses' => 'AssetCheckoutController@store'
         ]);
         Route::get('{assetId}/checkin/{backto?}', [
